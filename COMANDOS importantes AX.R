@@ -31,7 +31,7 @@ subset(datos,Genero=='F', select=c(2,3))
 
 ######---------------------------------------------------------------------------------------------------------#######
 #  ____________________________________________________________________________________________  #
-#  !                             PROGRAMACIÓN                                                 !  #
+#  !                             PROGRAMACIÃ“N                                                 !  #
 #  !__________________________________________________________________________________________!  #
 ######---------------------------------------------------------------------------------------------------------#######
 
@@ -47,7 +47,7 @@ cbind(v1,v2,v3)
 
 ######---------------------------------------------------------------------------------------------------------#######
 #  ____________________________________________________________________________________________  #
-#  !                          REGRESION Y DISEÑOS DE EXPERIMENTOS                              !  #
+#  !                          REGRESION Y DISEÃ‘OS DE EXPERIMENTOS                              !  #
 #  !__________________________________________________________________________________________!  #
 ######---------------------------------------------------------------------------------------------------------#######
 
@@ -68,7 +68,7 @@ res.bay<-MCMCregress(hijo~padre+madre+genero+origen)
 B1.PosterioriMarginal=res.bay[,2]
 qqnorm(B1.PosterioriMarginal)
 summary(res.bay)
-#HIPÓTESIS
+#HIPÃ“TESIS
 sigmas=rgamma(1000, 0.4, rate = 1)
 prob.norm<-function(B1.u,B1.sd,B1.PosterioriMarginal) pnorm(0.8, mean=B1.u,sd=B1.sd)
 ######---------------------------------------------------------------------------------------------------------#######
@@ -77,7 +77,7 @@ prob.norm<-function(B1.u,B1.sd,B1.PosterioriMarginal) pnorm(0.8, mean=B1.u,sd=B1
 library(proto)
 library(nls2)
 library(nlstools)
-MODELO=nls(y~ "escribir función" ,data=datos,start=list( valores iniciales de parámetros)
+MODELO=nls(y~ "escribir funciÃ³n" ,data=datos,start=list( valores iniciales de parÃ¡metros)
 overview(MODELO)
 ##supuestos
 ygorro=fitted(MODELO)
@@ -101,7 +101,7 @@ with(datos,leveneTest(y,as.factor(x1)))
 bartlett.test(epsiloniduals(MODELO),datos[,2])
 ######---------------------------------------------------------------------------------------------------------#######
 
-##############---------------------------------DISEÑOS DE EXPERIMENTOS
+##############---------------------------------DISEÃ‘OS DE EXPERIMENTOS
 
 laboratorio<-c(rep(1,5),rep(2,5),rep(3,5))
 laboratorio<-as.factor(laboratorio)
@@ -109,7 +109,7 @@ peso<-scan()
 38 43 45 36 45
 31 50 37 43 38
 50 38 30 41 44
-boxplot(split(peso,laboratorio),xlab='Laboratorios',ylab='Peso de estaño')
+boxplot(split(peso,laboratorio),xlab='Laboratorios',ylab='Peso de estaÃ±o')
 anovapeso<-aov(peso~laboratorio) 
 summary(aov(peso~laboratorio)) # Construye la tabla ANOVA 
 res<-residuals(anovapeso) # Se calculan los residuals. 
@@ -139,13 +139,13 @@ return(print(c(D,potencia, sigma2,alpha,tam.muestra)))
 #  !__________________________________________________________________________________________!  #
 ######---------------------------------------------------------------------------------------------------------#######
 
-###Cálculo del tamaño de muestra para estimar varias proporciones simultáneamente
-tamaño.max.d2<-function(m,alf) (qnorm(1-alf/(2*m)))^2*(1/m)*(1-1/m)
-####Considere el caso con 6 categorías, alfa=0.05
+###CÃ¡lculo del tamaÃ±o de muestra para estimar varias proporciones simultÃ¡neamente
+tamaÃ±o.max.d2<-function(m,alf) (qnorm(1-alf/(2*m)))^2*(1/m)*(1-1/m)
+####Considere el caso con 6 categorÃ­as, alfa=0.05
 k<-6; alfa=0.05
 
 mm<-matrix(seq(1:k),ncol=1)
-nd2<-apply(mm,1,tamaño.max.d2,alfa)
+nd2<-apply(mm,1,tamaÃ±o.max.d2,alfa)
 jj<-which.max(nd2)
 (nd2optimo<-mm[jj])
 
@@ -154,47 +154,47 @@ jj<-which.max(nd2)
 #  !                             SERIES DE TIEMPO                                             !  #
 #  !__________________________________________________________________________________________!  #
 ######---------------------------------------------------------------------------------------------------------#######
-# gráfica de la serie
+# grÃ¡fica de la serie
 plot.ts(seriew6, type="l")
 
-# transformación de Box-Cox.
+# transformaciÃ³n de Box-Cox.
 box.cox.powers(seriew6) 
 lamdaEncontrado= xxxxx
 tseriew6=seriew6^ lamdaEncontrado
 lseriew6=log(seriew6)
 
-# gráfica de la serie transformada y correlogramas muestrales
+# grÃ¡fica de la serie transformada y correlogramas muestrales
 plot.ts(lseriew6)
 par(mfrow=c(2,1))
 acf(lseriew6, lag.max=15, ci=0)
 pacf(lseriew6, lag.max=15, ci=0)
 
-# prueba de raíces unitarias sobre la serie transformada en niveles
+# prueba de raÃ­ces unitarias sobre la serie transformada en niveles
 (maxlag=round(length(seriew6)^(1/3)))
 ru_w6=ur.df(lseriew6, type = c("trend"), lags=maxlag, selectlags = c("BIC"))
 summary(ru_w6)
-# conclusión parece que hay raíz unitaria
+# conclusiÃ³n parece que hay raÃ­z unitaria
 
-# prueba de raíces unitarias sobre la serie diferenciada
+# prueba de raÃ­ces unitarias sobre la serie diferenciada
 ru_w6d=ur.df(diff(lseriew6), type = c("drift"), lags=maxlag, selectlags = c("BIC"))
 summary(ru_w6d)
-# reespecificacón del modelo
+# reespecificacÃ³n del modelo
 ru_w6d=ur.df(diff(lseriew6), type = c("none"), lags=0)
 summary(ru_w6d)
-# conclusión parece que la serie diferenciada es estacionaria
+# conclusiÃ³n parece que la serie diferenciada es estacionaria
 
-# análisis para la serie transformada diferenciada una vez
+# anÃ¡lisis para la serie transformada diferenciada una vez
 plot.ts(diff(log(seriew6)), type="l")
 # correlogramas muestrales acf(diff(log(seriew6)), lag.max=15, ci=0) y pacf(diff(log(seriew6)), lag.max=15, ci=0)
 
-# estimación del modelo usando la función arima de stats
-# estimación ML condicional con deriva
+# estimaciÃ³n del modelo usando la funciÃ³n arima de stats
+# estimaciÃ³n ML condicional con deriva
 (mod_w6_CSS=arima(diff(log(seriew6)), c(0, 0, 1), method = c("CSS"))) 
 (res_w6_CSS=residuals(mod_w6_CSS))
-# estimación ML exacta con deriva
+# estimaciÃ³n ML exacta con deriva
 (mod_w6_ML=arima(diff(log(seriew6)), c(0, 0, 1), method = c("ML"))) 
 (res_w6_ML=residuals(mod_w6_ML))
-# estimación ML exacta con valores iniciales dados por la estimación condicional sin deiva
+# estimaciÃ³n ML exacta con valores iniciales dados por la estimaciÃ³n condicional sin deiva
 (mod_w6_CSS_ML=arima(diff(log(seriew6)), c(0, 0, 1), method = c("CSS-ML"))) 
 (res_w6_CSS_ML=residuals(mod_w6_CSS_ML))
 
@@ -233,7 +233,7 @@ DatosKmeans[1:10,]
 write.table(DatosKmeans, file = "DatosKmeansS9.txt")
 
 
-######----------------------------------- JERÁRQUICO - Ward Hierarchical Clustering
+######----------------------------------- JERÃRQUICO - Ward Hierarchical Clustering
 
 #library(cluster)
 d <- daisy(mydata)
@@ -294,12 +294,12 @@ print(acpI$row.cum/100)
 
 barplot(acp$eig)
 
-par(mfrow=c(2,2)) # para 4 gr¶aficas simult¶aneas
-s.corcircle(acp$co,sub="Cafe - C¶³rculo de correlaciones",possub= "bottomright")
-# se define iden para tener etiquetas m¶as cortas en las gr¶aficas
+par(mfrow=c(2,2)) # para 4 grÂ¶aficas simultÂ¶aneas
+s.corcircle(acp$co,sub="Cafe - CÂ¶Â³rculo de correlaciones",possub= "bottomright")
+# se define iden para tener etiquetas mÂ¶as cortas en las grÂ¶aficas
 iden <- c("EC","C4M","C4C","C2M","C2C","EO","O4M","O4C","O2M","O2C")
 # s.label es de ade4 y coloca puntos con etiquetas en planos factoriales
-s.label(acp$li,label=iden,sub="Preparaciones de caf¶e",possub= "bottomright")
+s.label(acp$li,label=iden,sub="Preparaciones de cafÂ¶e",possub= "bottomright")
 
 
 
@@ -307,7 +307,18 @@ s.label(acp$li,label=iden,sub="Preparaciones de caf¶e",possub= "bottomright")
 ######---------------------------------------------------------------------------------------------------------#######
 #########--------------------------------------Correspondencia
 
-SAS
+#Disyuntiva
+head(acm.disjonctif(datos_correspondencia),2)
+
+#Burt
+head(acm.burt(datos_correspondencia, datos_correspondencia),2)
+           
+#ACM
+acm <- dudi.acm(datos_correspondencia,scannf=F,nf=2)
+
+boxplot(acm)
+
+scatter(acm)
 
 ######---------------------------------------------------------------------------------------------------------#######
 
